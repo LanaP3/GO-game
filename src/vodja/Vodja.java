@@ -59,7 +59,7 @@ public class Vodja {
 			protected void done () {
 				if (igra != zacetnaIgra) return;
 				Poteza poteza = ai.izberiPotezo(igra);
-				igra.narediPotezo(poteza);
+				igra.odigraj(poteza);
 				igraj();	
 			}
 		};
@@ -69,7 +69,7 @@ public class Vodja {
 		
 	public static void igrajClovekovoPotezo(Poteza poteza) {
 		if (clovekNaVrsti && igra.poteze().contains(poteza)) {
-			igra.narediPotezo(poteza);
+			igra.odigraj(poteza);
 			clovekNaVrsti = false;
 			igraj();
 		}
