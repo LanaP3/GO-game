@@ -24,7 +24,11 @@ public class Okno extends JFrame implements ActionListener {
 	private JMenuItem menuRacIgralec;
 	private JMenuItem menuIgralecRac;
 	private JMenuItem menuRacRac;
+	private JMenuItem menu9;
+	private JMenuItem menu19;
+	private JMenuItem menu13;
 	private JLabel status;
+	private int dim;
 	
 	public Okno() {
 		super();
@@ -57,11 +61,18 @@ public class Okno extends JFrame implements ActionListener {
 		setJMenuBar(menubar);
 		
 		JMenu menuNovaIgra = dodajMenu(menubar, "Nova igra...");
+		JMenu izberiVelikost = dodajMenu(menubar, "Velikost plošče...");
 		
 		menuIgralecIgralec = dodajMenuItem(menuNovaIgra, "Igralec : igralec");
 		menuRacIgralec = dodajMenuItem(menuNovaIgra, "Računalnik : igralec");
 		menuIgralecRac = dodajMenuItem(menuNovaIgra, "Igralec : računalnik");
 		menuRacRac = dodajMenuItem(menuNovaIgra, "Računalnik : računalnik");
+		
+		menu19 = dodajMenuItem(izberiVelikost, "19x19");
+		menu13 = dodajMenuItem(izberiVelikost, "13x13");
+		menu9 = dodajMenuItem(izberiVelikost, "9x9");
+		
+		dim = 19;
 	}
 	
 	private JMenu dodajMenu(JMenuBar menubar, String naslov) {
@@ -103,6 +114,12 @@ public class Okno extends JFrame implements ActionListener {
 			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.R);
 			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.R);
 			Vodja.igrajNovoIgro();
+			}
+		else if (objekt == menu19) {
+			}
+		else if (objekt == menu13) {
+			}
+		else if (objekt == menu19) {
 			}
 		
 	}
