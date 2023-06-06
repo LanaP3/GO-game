@@ -20,7 +20,7 @@ public class Vodja {
 	public static boolean clovekNaVrsti = false;
 		
 	public static void igrajNovoIgro () {
-		igra = new Igra();
+		igra = new Igra(9);
 		igraj ();
 	}
 	public static void igraj () {
@@ -28,7 +28,6 @@ public class Vodja {
 		switch (igra.stanje()) {
 		case ZMAGA_CRNI: 
 		case ZMAGA_BELI: 
-		case NEODLOCENO: 
 			return; 
 		case V_TEKU: 
 			Igralec igralec = igra.na_potezi;
@@ -45,7 +44,7 @@ public class Vodja {
 	}
 	
 	private static Random random = new Random ();
-	public static Alphabeta ai = new Alphabeta(4);
+	public static Alphabeta ai = new Alphabeta(3);
 
 	public static void igrajRacunalnikovoPotezo() {
 		Igra zacetnaIgra = igra;
@@ -73,6 +72,13 @@ public class Vodja {
 			clovekNaVrsti = false;
 			igraj();
 		}
+	}
+	
+	public static void preskoci() {
+		igra.na_potezi = igra.na_potezi.nasprotnik();
+		igra.preskoki++;
+		clovekNaVrsti = false;
+		igraj();
 	}
 
 

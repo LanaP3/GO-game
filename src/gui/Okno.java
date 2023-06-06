@@ -27,12 +27,13 @@ public class Okno extends JFrame implements ActionListener {
 	private JMenuItem menu9;
 	private JMenuItem menu19;
 	private JMenuItem menu13;
+	private JMenuItem preskociPotezo;
 	private JLabel status;
 	private int dim;
 	
 	public Okno() {
 		super();
-		setTitle("Capture-GO");
+		setTitle("GO");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new GridBagLayout());
 		
@@ -62,6 +63,7 @@ public class Okno extends JFrame implements ActionListener {
 		
 		JMenu menuNovaIgra = dodajMenu(menubar, "Nova igra...");
 		JMenu izberiVelikost = dodajMenu(menubar, "Velikost plošče...");
+		JMenu trenutnaIgra = dodajMenu(menubar, "Trenutna igra...");
 		
 		menuIgralecIgralec = dodajMenuItem(menuNovaIgra, "Igralec : igralec");
 		menuRacIgralec = dodajMenuItem(menuNovaIgra, "Računalnik : igralec");
@@ -71,6 +73,8 @@ public class Okno extends JFrame implements ActionListener {
 		menu19 = dodajMenuItem(izberiVelikost, "19x19");
 		menu13 = dodajMenuItem(izberiVelikost, "13x13");
 		menu9 = dodajMenuItem(izberiVelikost, "9x9");
+		
+		preskociPotezo = dodajMenuItem(trenutnaIgra, "Preskoči potezo");
 		
 		dim = 19;
 	}
@@ -121,6 +125,11 @@ public class Okno extends JFrame implements ActionListener {
 			}
 		else if (objekt == menu19) {
 			}
+		else if (objekt == preskociPotezo) {
+			if (Vodja.igra != null) {
+				Vodja.preskoci();
+			}
+		}
 		
 	}
 	
@@ -128,9 +137,6 @@ public class Okno extends JFrame implements ActionListener {
 		if (Vodja.igra == null) status.setText("Izberi igro");
 		else {
 			switch(Vodja.igra.stanje()) {
-			case NEODLOCENO:
-				status.setText("Neodločeno!");
-				break;
 			case ZMAGA_BELI:
 				status.setText("Zmagal je beli");
 				break;

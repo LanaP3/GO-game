@@ -23,6 +23,13 @@ public class SkupinaZetonov {
 		skupina.add(zeton);
 	}
 	
+	public void odstraniSkupino() {
+		for (Zeton z : skupina) {
+			z.spremeniBarvo(Polje.PRAZNO);
+			z.obkoljen = false;
+		}
+	}
+	
 	public boolean isIn(Zeton z) {
 		for (Zeton e : skupina) {
 			if (z.equals(e)) return true;

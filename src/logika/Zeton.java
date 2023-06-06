@@ -8,21 +8,21 @@ public class Zeton {
 	public Set<Koordinati> sosedi;
 	public Polje polje;
 	protected boolean obkoljen;
-	protected int dim_mreze;
+	protected int n;
 	
-	public Zeton(int x, int y) {
+	public Zeton(int x, int y, int n) {
 		koordinati = new Koordinati(x, y);
 		polje = Polje.PRAZNO;
 		sosedi = new HashSet<Koordinati>();
 		obkoljen = false;
-		dim_mreze = 9;
+		this.n = n;
 		
 		int[] arr = {1, -1};
 		for (int i : arr) {
-			if (x+i < 9 && x+i >= 0) {
+			if (x+i < n && x+i >= 0) {
 				sosedi.add(new Koordinati(x + i, y));
 			}
-			if (y+i < 9 && y+i >= 0) {
+			if (y+i < n && y+i >= 0) {
 				sosedi.add(new Koordinati(x, y + i));
 			}
 		}
@@ -34,7 +34,7 @@ public class Zeton {
 		obkoljen = zeton.obkoljen;
 		polje = zeton.polje;
 		sosedi = zeton.sosedi;
-		dim_mreze = 9;
+		n = zeton.n;
 	}
 	
 	public Polje polje() {
