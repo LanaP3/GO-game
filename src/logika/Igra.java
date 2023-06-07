@@ -51,10 +51,85 @@ public class Igra {
 	}
 	
 	public Stanje stanje() {
+		int tocke;
 		if (preskoki >= 2) {
-			return Stanje.ZMAGA_BELI;
+			tocke = prestejTocke();
+			if (tocke > 0) return Stanje.ZMAGA_CRNI;
+			else return Stanje.ZMAGA_BELI; // če je 'neodločeno' zmaga beli
 		}
 		return Stanje.V_TEKU;
+	}
+	
+	private int prestejTocke() {
+		int tocke = 0;
+		Set<Koordinati> pregledani = new HashSet<Koordinati>();
+		Map<Integer, Set<Koordinati>> praznaSkupina;
+		for (Zeton z : mreza.values()) {
+			if (!pregledani.contains(z.koordinati)) {
+				switch (z.polje()) {
+				case BELO:
+					tocke--;
+					pregledani.add(z.koordinati);
+					break;
+				case CRNO:
+					tocke++;
+					pregledani.add(z.koordinati);
+					break;
+				case PRAZNO:
+					praznaSkupina = praznaSkupina(z.koordinati);
+					if (praznaSkupina != null) {
+						if (praznaSkupina.containsKey(1)) {
+							tocke += praznaSkupina.get(1).size();
+							pregledani.addAll(praznaSkupina.get(1));
+						} else if (praznaSkupina.containsKey(-1)){
+							tocke -= praznaSkupina.get(-1).size();
+							pregledani.addAll(praznaSkupina.get(-1));
+						} else {
+							pregledani.addAll(praznaSkupina.get(0));
+						}
+					}
+					break;
+				}
+			}
+		}
+		return tocke;
+	}
+	
+	private Map<Integer, Set<Koordinati>> praznaSkupina(Koordinati k) {
+		Set<Koordinati> prazni = new HashSet<Koordinati>();
+		prazni.add(k);
+		Set<Koordinati> prazni2 = new HashSet<Koordinati>();
+		prazni2.add(k);
+		Polje barva = Polje.PRAZNO;
+		boolean f = false;
+		int l = 0;
+		do {
+			l = prazni.size();
+			for (Koordinati i : prazni) {
+				for (Koordinati j : mreza.get(i).sosedi) {
+					switch (mreza.get(j).polje()) {
+					case BELO:
+						if (barva == Polje.CRNO) f = true;
+						else if (barva == Polje.PRAZNO) barva = Polje.BELO;
+						break;
+					case CRNO:
+						if (barva == Polje.BELO) f = true;
+						else if (barva == Polje.PRAZNO) barva = Polje.CRNO;
+						break;
+					case PRAZNO:
+						prazni2.add(j);
+						break;
+					}
+				}
+			}
+			prazni.addAll(prazni2);	
+		} while (prazni.size() > l);
+		
+		HashMap<Integer, Set<Koordinati>> map = new HashMap<Integer, Set<Koordinati>>();
+		if (f) map.put(0, prazni);
+		else if (barva == Polje.CRNO) map.put(1, prazni);
+		else map.put(-1, prazni);
+		return map;
 	}
 	
 	public void odstraniUjete() { 
