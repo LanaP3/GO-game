@@ -19,8 +19,8 @@ public class Vodja {
 	public static Igra igra = null;
 	public static boolean clovekNaVrsti = false;
 		
-	public static void igrajNovoIgro () {
-		igra = new Igra(9);
+	public static void igrajNovoIgro(int n) {
+		igra = new Igra(n);
 		igraj ();
 	}
 	public static void igraj () {
