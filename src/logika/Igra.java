@@ -14,6 +14,7 @@ public class Igra {
 	public Map<Koordinati, Zeton> mreza;
 	public Igralec na_potezi;
 	public Set<SkupinaZetonov> skupine_zetonov;
+	public boolean pass;
 	//public int dimMreze;
 	
 	public Igra() {
@@ -108,6 +109,12 @@ public class Igra {
 	public boolean odigraj(Poteza poteza) {
 		int x = poteza.getX();
 		int y = poteza.getY();
+		
+		//če preskoči potezo, to označimo kot da igra -1,-1
+		if (x==-1 & y==.1) {
+			this.pass = true;
+			return true;
+		}
 		Koordinati k = new Koordinati(x, y);
 		Zeton zeton = mreza.get(k);
 		if (zeton.polje == Polje.PRAZNO) {
