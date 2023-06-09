@@ -44,8 +44,6 @@ public class Platno extends JPanel implements MouseListener {
 	public Platno(int x, int y) {
 		setPreferredSize(new Dimension(x,y));
 		this.n = 9;
-		min = min(x, y);
-		dimPolja = min/(n + 2);
 		barvaMreze = Color.BLACK;
 		barvaRobaUjetih = Color.PINK;
 		barvaCrnih = Color.BLACK;
@@ -54,7 +52,6 @@ public class Platno extends JPanel implements MouseListener {
 		debelinaRobaUjetih = new BasicStroke(5);
 		debelinaRobaMreze = new BasicStroke(1);
 		debelinaRobaTrenutnega = new BasicStroke(1);
-		polmer = 0.8*dimPolja;
 		crniZetoni = new HashSet<Zeton>();
 		beliZetoni = new HashSet<Zeton>();
 		ujetiZetoni = new HashSet<Zeton>();
@@ -65,8 +62,6 @@ public class Platno extends JPanel implements MouseListener {
 	
 	public void spremeniDimenzijo(int n) {
 		this.n = n;
-		dimPolja = min/(n+2);
-		polmer = 0.8*dimPolja;
 	}
 	
 	private int min(int x, int y) {
@@ -81,6 +76,9 @@ public class Platno extends JPanel implements MouseListener {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		int min = min(this.getHeight(), this.getWidth());
+		int dimPolja = min/(n + 2);
+		double polmer = 0.8*dimPolja;
 		setBackground(new Color(230,188,132));
 			//narišemo mrežo
 			Graphics2D g2 = (Graphics2D) g;
@@ -98,6 +96,32 @@ public class Platno extends JPanel implements MouseListener {
 				g.fillOval(7*dimPolja-5, 3*dimPolja-5, 10, 10);
 				g.fillOval(7*dimPolja-5, 7*dimPolja-5, 10, 10);
 				g.fillOval(5*dimPolja-5, 5*dimPolja-5, 10, 10);
+			}
+			else if (n == 13) {
+				g.fillOval(4*dimPolja-5, 4*dimPolja-5, 10, 10);
+				g.fillOval(4*dimPolja-5, 7*dimPolja-5, 10, 10);
+				g.fillOval(4*dimPolja-5, 10*dimPolja-5, 10, 10);
+				
+				g.fillOval(7*dimPolja-5, 4*dimPolja-5, 10, 10);
+				g.fillOval(7*dimPolja-5, 7*dimPolja-5, 10, 10);
+				g.fillOval(7*dimPolja-5, 10*dimPolja-5, 10, 10);
+				
+				g.fillOval(10*dimPolja-5, 4*dimPolja-5, 10, 10);
+				g.fillOval(10*dimPolja-5, 7*dimPolja-5, 10, 10);
+				g.fillOval(10*dimPolja-5, 10*dimPolja-5, 10, 10);
+			}
+			else {
+				g.fillOval(4*dimPolja-5, 4*dimPolja-5, 10, 10);
+				g.fillOval(4*dimPolja-5, 16*dimPolja-5, 10, 10);
+				g.fillOval(4*dimPolja-5, 10*dimPolja-5, 10, 10);
+				
+				g.fillOval(10*dimPolja-5, 4*dimPolja-5, 10, 10);
+				g.fillOval(10*dimPolja-5, 16*dimPolja-5, 10, 10);
+				g.fillOval(10*dimPolja-5, 10*dimPolja-5, 10, 10);
+
+				g.fillOval(16*dimPolja-5, 4*dimPolja-5, 10, 10);
+				g.fillOval(16*dimPolja-5, 16*dimPolja-5, 10, 10);
+				g.fillOval(16*dimPolja-5, 10*dimPolja-5, 10, 10);
 			}
 			if (Vodja.igra != null) {
 			g2.setStroke(debelinaRobaUjetih);
