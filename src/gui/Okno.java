@@ -20,6 +20,7 @@ import vodja.VrstaIgralca;
 @SuppressWarnings("serial")
 public class Okno extends JFrame implements ActionListener {
 	public Platno platno;
+	protected int dimenzija = 9;
 	private JMenuItem menuIgralecIgralec;
 	private JMenuItem menuRacIgralec;
 	private JMenuItem menuIgralecRac;
@@ -27,12 +28,12 @@ public class Okno extends JFrame implements ActionListener {
 	private JMenuItem menu9;
 	private JMenuItem menu19;
 	private JMenuItem menu13;
+	private JMenuItem preskociPotezo;
 	private JLabel status;
-	private int dim;
 	
 	public Okno() {
 		super();
-		setTitle("Capture-GO");
+		setTitle("GO");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new GridBagLayout());
 		
@@ -62,6 +63,7 @@ public class Okno extends JFrame implements ActionListener {
 		
 		JMenu menuNovaIgra = dodajMenu(menubar, "Nova igra...");
 		JMenu izberiVelikost = dodajMenu(menubar, "Velikost plošče...");
+		JMenu trenutnaIgra = dodajMenu(menubar, "Trenutna igra...");
 		
 		menuIgralecIgralec = dodajMenuItem(menuNovaIgra, "Igralec : igralec");
 		menuRacIgralec = dodajMenuItem(menuNovaIgra, "Računalnik : igralec");
@@ -72,7 +74,8 @@ public class Okno extends JFrame implements ActionListener {
 		menu13 = dodajMenuItem(izberiVelikost, "13x13");
 		menu9 = dodajMenuItem(izberiVelikost, "9x9");
 		
-		dim = 19;
+		preskociPotezo = dodajMenuItem(trenutnaIgra, "Preskoči potezo");
+		
 	}
 	
 	private JMenu dodajMenu(JMenuBar menubar, String naslov) {
@@ -95,32 +98,49 @@ public class Okno extends JFrame implements ActionListener {
 			Vodja.vrstaIgralca = new EnumMap<Igralec, VrstaIgralca>(Igralec.class);
 			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.C);
 			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.C);
-			Vodja.igrajNovoIgro();
+			Vodja.igrajNovoIgro(dimenzija);
 			}
 		else if (objekt == menuRacIgralec) {
 			Vodja.vrstaIgralca = new EnumMap<Igralec, VrstaIgralca>(Igralec.class);
 			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.R);
 			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.C);
-			Vodja.igrajNovoIgro();
+			Vodja.igrajNovoIgro(dimenzija);
 			}
 		else if (objekt == menuIgralecRac) {
 			Vodja.vrstaIgralca = new EnumMap<Igralec, VrstaIgralca>(Igralec.class);
 			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.C);
 			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.R);
-			Vodja.igrajNovoIgro();
+			Vodja.igrajNovoIgro(dimenzija);
 			}
 		else if (objekt == menuRacRac) {
 			Vodja.vrstaIgralca = new EnumMap<Igralec, VrstaIgralca>(Igralec.class);
 			Vodja.vrstaIgralca.put(Igralec.CRNI, VrstaIgralca.R);
 			Vodja.vrstaIgralca.put(Igralec.BELI, VrstaIgralca.R);
-			Vodja.igrajNovoIgro();
+			Vodja.igrajNovoIgro(dimenzija);
 			}
-		else if (objekt == menu19) {
+		else if (objekt == menu9) {
+			platno.spremeniDimenzijo(9);
+			dimenzija = 9;
+			Vodja.igra = null;
+			osveziGUI();
 			}
 		else if (objekt == menu13) {
+			platno.spremeniDimenzijo(13);
+			dimenzija = 13;
+			Vodja.igra = null;
+			osveziGUI();
 			}
 		else if (objekt == menu19) {
+			platno.spremeniDimenzijo(19);
+			dimenzija = 19;
+			Vodja.igra = null;
+			osveziGUI();
 			}
+		else if (objekt == preskociPotezo) {
+			if (Vodja.igra != null) {
+				Vodja.preskoci();
+			}
+		}
 		
 	}
 	
@@ -128,9 +148,6 @@ public class Okno extends JFrame implements ActionListener {
 		if (Vodja.igra == null) status.setText("Izberi igro");
 		else {
 			switch(Vodja.igra.stanje()) {
-			case NEODLOCENO:
-				status.setText("Neodločeno!");
-				break;
 			case ZMAGA_BELI:
 				status.setText("Zmagal je beli");
 				break;

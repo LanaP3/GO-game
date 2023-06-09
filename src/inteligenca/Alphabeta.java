@@ -28,8 +28,6 @@ public class Alphabeta {
 		List<Poteza> poteze = igra.poteze();
 		Collections.sort(poteze, new NewSort(igra));
 		switch (igra.stanje()) {
-		case NEODLOCENO:
-			return new OcenjenaPoteza(null, 0);
 		case ZMAGA_BELI:
 			return new OcenjenaPoteza(null, Integer.MIN_VALUE);
 		case ZMAGA_CRNI:
@@ -40,7 +38,7 @@ public class Alphabeta {
 				int maxEval = Integer.MIN_VALUE;
 				Poteza o = poteze.get(0);
 				for (Poteza p : poteze) {
-					Igra kopijaIgre = new Igra(igra.mreza, igra.na_potezi, igra.skupine_zetonov);
+					Igra kopijaIgre = new Igra(igra);
 					kopijaIgre.odigraj(p);
 					int eval = alphabeta(kopijaIgre, globina - 1, alpha, beta, false).ocena;
 					if (eval > maxEval) {
@@ -55,7 +53,7 @@ public class Alphabeta {
 				int minEval = Integer.MAX_VALUE;
 				Poteza o = poteze.get(0);
 				for (Poteza p : poteze) {
-					Igra kopijaIgre = new Igra(igra.mreza, igra.na_potezi, igra.skupine_zetonov);
+					Igra kopijaIgre = new Igra(igra);
 					kopijaIgre.odigraj(p);
 					int eval = alphabeta(kopijaIgre, globina - 1, alpha, beta, true).ocena;
 					if (eval < minEval) {

@@ -14,32 +14,33 @@ public class Igra {
 	public Map<Koordinati, Zeton> mreza;
 	public Igralec na_potezi;
 	public Set<SkupinaZetonov> skupine_zetonov;
-	public boolean pass;
-	//public int dimMreze;
+	public int n; // dimenzija mreze
+	public int preskoki; // število zaporednih preskokov poteze (če >= 2 se igra konča)
 	
-	public Igra() {
-		//dimMreze = 9;
+	public Igra(int n) {
+		this.n = n;
 		mreza = new HashMap<Koordinati, Zeton>();
 		na_potezi = Igralec.CRNI;
 		skupine_zetonov = new HashSet<SkupinaZetonov>();
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				mreza.put(new Koordinati(i, j), new Zeton(i, j));
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				mreza.put(new Koordinati(i, j), new Zeton(i, j, n));
 			}
 		}
 	}
 	
 	// naredi kopijo igre
-	public Igra(Map<Koordinati, Zeton> mreza, Igralec na_potezi, Set<SkupinaZetonov> skupine_zetonov) {
+	public Igra(Igra igra) {
 		this.mreza = new HashMap<Koordinati, Zeton>();
 		this.skupine_zetonov = new HashSet<SkupinaZetonov>();
-		this.na_potezi = na_potezi;
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				this.mreza.put(new Koordinati(i, j), new Zeton(mreza.get(new Koordinati(i, j))));
+		this.na_potezi = igra.na_potezi;
+		this.n = igra.n;
+		for (int i = 0; i < igra.n; i++) {
+			for (int j = 0; j < igra.n; j++) {
+				this.mreza.put(new Koordinati(i, j), new Zeton(igra.mreza.get(new Koordinati(i, j))));
 			}
 		}
-		for (SkupinaZetonov s : skupine_zetonov) {
+		for (SkupinaZetonov s : igra.skupine_zetonov) {
 			this.skupine_zetonov.add(new SkupinaZetonov(s));
 		}
 	}
@@ -49,9 +50,89 @@ public class Igra {
 		return na_potezi;
 	}
 	
+	public Stanje stanje() {
+		int tocke;
+		if (preskoki >= 2) {
+			tocke = prestejTocke();
+			if (tocke > 0) return Stanje.ZMAGA_CRNI;
+			else return Stanje.ZMAGA_BELI; // če je 'neodločeno' zmaga beli
+		}
+		return Stanje.V_TEKU;
+	}
 	
+	private int prestejTocke() {
+		int tocke = 0;
+		Set<Koordinati> pregledani = new HashSet<Koordinati>();
+		Map<Integer, Set<Koordinati>> praznaSkupina;
+		for (Zeton z : mreza.values()) {
+			if (!pregledani.contains(z.koordinati)) {
+				switch (z.polje()) {
+				case BELO:
+					tocke--;
+					pregledani.add(z.koordinati);
+					break;
+				case CRNO:
+					tocke++;
+					pregledani.add(z.koordinati);
+					break;
+				case PRAZNO:
+					praznaSkupina = praznaSkupina(z.koordinati);
+					if (praznaSkupina != null) {
+						if (praznaSkupina.containsKey(1)) {
+							tocke += praznaSkupina.get(1).size();
+							pregledani.addAll(praznaSkupina.get(1));
+						} else if (praznaSkupina.containsKey(-1)){
+							tocke -= praznaSkupina.get(-1).size();
+							pregledani.addAll(praznaSkupina.get(-1));
+						} else {
+							pregledani.addAll(praznaSkupina.get(0));
+						}
+					}
+					break;
+				}
+			}
+		}
+		return tocke;
+	}
 	
-	public Stanje stanje() { 
+	private Map<Integer, Set<Koordinati>> praznaSkupina(Koordinati k) {
+		Set<Koordinati> prazni = new HashSet<Koordinati>();
+		prazni.add(k);
+		Set<Koordinati> prazni2 = new HashSet<Koordinati>();
+		prazni2.add(k);
+		Polje barva = Polje.PRAZNO;
+		boolean f = false;
+		int l = 0;
+		do {
+			l = prazni.size();
+			for (Koordinati i : prazni) {
+				for (Koordinati j : mreza.get(i).sosedi) {
+					switch (mreza.get(j).polje()) {
+					case BELO:
+						if (barva == Polje.CRNO) f = true;
+						else if (barva == Polje.PRAZNO) barva = Polje.BELO;
+						break;
+					case CRNO:
+						if (barva == Polje.BELO) f = true;
+						else if (barva == Polje.PRAZNO) barva = Polje.CRNO;
+						break;
+					case PRAZNO:
+						prazni2.add(j);
+						break;
+					}
+				}
+			}
+			prazni.addAll(prazni2);	
+		} while (prazni.size() > l);
+		
+		HashMap<Integer, Set<Koordinati>> map = new HashMap<Integer, Set<Koordinati>>();
+		if (f) map.put(0, prazni);
+		else if (barva == Polje.CRNO) map.put(1, prazni);
+		else map.put(-1, prazni);
+		return map;
+	}
+	
+	public void odstraniUjete() { 
 		SkupinaZetonov obkoljena = null;
 		Set<SkupinaZetonov> obkoljene_druga_barva = new HashSet<SkupinaZetonov>();
 		for (SkupinaZetonov sk : skupine_zetonov) {
@@ -72,28 +153,13 @@ public class Igra {
 		}
 		if (obkoljene_druga_barva.size() > 0) {
 			for (SkupinaZetonov s : obkoljene_druga_barva) {
-				for (Zeton z : s.skupina) z.obkoli();
-			}
-			switch (na_potezi) {
-			case BELI:
-				return Stanje.ZMAGA_CRNI;
-			case CRNI:
-				return Stanje.ZMAGA_BELI;
+				s.odstraniSkupino();
+				skupine_zetonov.remove(s);
 			}
 		} else if (obkoljena != null) {
-			for (Zeton z : obkoljena.skupina) z.obkoli();
-			switch (na_potezi) {
-			case BELI:
-				return Stanje.ZMAGA_BELI;
-			case CRNI:
-				return Stanje.ZMAGA_CRNI;
-			}
+			obkoljena.odstraniSkupino();
+			skupine_zetonov.remove(obkoljena);
 		}
-		for (Zeton z : mreza.values()) {
-			if (z.polje == Polje.PRAZNO) return Stanje.V_TEKU;
-		}
-		
-		return Stanje.NEODLOCENO;
 	}
 	
 	private boolean jeObkoljena(SkupinaZetonov s) {
@@ -109,15 +175,10 @@ public class Igra {
 	public boolean odigraj(Poteza poteza) {
 		int x = poteza.getX();
 		int y = poteza.getY();
-		
-		//če preskoči potezo, to označimo kot da igra -1,-1
-		if (x==-1 & y==.1) {
-			this.pass = true;
-			return true;
-		}
 		Koordinati k = new Koordinati(x, y);
 		Zeton zeton = mreza.get(k);
 		if (zeton.polje == Polje.PRAZNO) {
+			preskoki = 0;
 			zeton.spremeniBarvo(na_potezi.polje());
 			SkupinaZetonov s = new SkupinaZetonov(zeton);
 			for (Koordinati l : zeton.sosedi) {
@@ -138,6 +199,7 @@ public class Igra {
 			skupine_zetonov.add(s);
 			
 			na_potezi = na_potezi.nasprotnik();
+			odstraniUjete();
 			return true;
 		}
 		return false;

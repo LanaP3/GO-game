@@ -24,6 +24,8 @@ import vodja.Vodja;
 public class Platno extends JPanel implements MouseListener {
 	
 	protected int dimPolja;
+	protected int n;
+	protected int min;
 	protected Color barvaMreze;
 	protected Color barvaRobaUjetih;
 	protected Stroke debelinaRobaUjetih;
@@ -41,8 +43,9 @@ public class Platno extends JPanel implements MouseListener {
 	
 	public Platno(int x, int y) {
 		setPreferredSize(new Dimension(x,y));
-		//dimPolja = min(x,y)/(igra.dimMreze + 2);
-		dimPolja = min(x,y)/(11);
+		this.n = 9;
+		min = min(x, y);
+		dimPolja = min/(n + 2);
 		barvaMreze = Color.BLACK;
 		barvaRobaUjetih = Color.PINK;
 		barvaCrnih = Color.BLACK;
@@ -58,6 +61,12 @@ public class Platno extends JPanel implements MouseListener {
 		trenutniZeton = null;
 		
 		addMouseListener(this);
+	}
+	
+	public void spremeniDimenzijo(int n) {
+		this.n = n;
+		dimPolja = min/(n+2);
+		polmer = 0.8*dimPolja;
 	}
 	
 	private int min(int x, int y) {
@@ -77,17 +86,13 @@ public class Platno extends JPanel implements MouseListener {
 			Graphics2D g2 = (Graphics2D) g;
 			g.setColor(barvaMreze);
 			g2.setStroke(debelinaRobaMreze);
-			// int d = igra.dimMreze;
-			int d = 9;
-			for (int i = 0; i < d; i++) {
-				for (int j = 0; j < d; j++) {
-					g.drawLine((i+1)*dimPolja, dimPolja, (i+1)*dimPolja, dimPolja*(d));
-					g.drawLine(dimPolja, (j+1)*dimPolja, dimPolja*(d), (j+1)*dimPolja);
-				}
+			for (int i = 0; i < n; i++) {
+				g.drawLine((i+1)*dimPolja, dimPolja, (i+1)*dimPolja, dimPolja*(n));
+				g.drawLine(dimPolja, (i+1)*dimPolja, dimPolja*(n), (i+1)*dimPolja);
 			}
 			
 			//narišemo mesta fore
-			if (d == 9) {
+			if (n == 9) {
 				g.fillOval(3*dimPolja-5, 3*dimPolja-5, 10, 10);
 				g.fillOval(3*dimPolja-5, 7*dimPolja-5, 10, 10);
 				g.fillOval(7*dimPolja-5, 3*dimPolja-5, 10, 10);
@@ -126,8 +131,8 @@ public class Platno extends JPanel implements MouseListener {
 		if (Vodja.clovekNaVrsti) {
 			int klikX = e.getX();
 			int klikY = e.getY();
-			if (klikX < dimPolja/2 || klikX > 10.5*dimPolja) return;
-			if (klikY < dimPolja/2 || klikY > 10.5*dimPolja) return;
+			if (klikX < dimPolja/2 || klikX > (1.5 + n)*dimPolja) return;
+			if (klikY < dimPolja/2 || klikY > (1.5 + n)*dimPolja) return;
 			else {
 				int x = (klikX+(dimPolja/2))/dimPolja-1;
 				int y = (klikY+(dimPolja/2))/dimPolja-1;
