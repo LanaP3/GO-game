@@ -36,17 +36,31 @@ public class Okno extends JFrame implements ActionListener {
 		super();
 		setTitle("GO");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setLayout(new BorderLayout());
+		//this.setLayout(new BorderLayout());
+		this.setLayout(new GridBagLayout());
 		
 		platno = new Platno(800, 800);
-		this.add(platno, BorderLayout.NORTH);
+		GridBagConstraints platno_layout = new GridBagConstraints();
+		platno_layout.gridx = 0;
+		platno_layout.gridy = 0;
+		platno_layout.fill = GridBagConstraints.BOTH;
+		platno_layout.weightx = 1.0;
+		platno_layout.weighty = 1.0;
+		getContentPane().add(platno, platno_layout);
+		// this.add(platno, BorderLayout.NORTH);
 		
 		status = new JLabel();
 		status.setFont(new Font(status.getFont().getName(),
 			    status.getFont().getStyle(),
 			    20));
+		GridBagConstraints status_layout = new GridBagConstraints();
+		status_layout.gridx = 0;
+		status_layout.gridy = 1;
+		status_layout.anchor = GridBagConstraints.CENTER;
+		getContentPane().add(status, status_layout);
 		
 		status.setText("Izberite igro!");
+		
 	
 		JMenuBar menubar = new JMenuBar();
 		setJMenuBar(menubar);
@@ -65,7 +79,7 @@ public class Okno extends JFrame implements ActionListener {
 		menu9 = dodajMenuItem(izberiVelikost, "9x9");
 		
 		preskociPotezo = dodajMenuItem(trenutnaIgra, "Preskoči potezo");
-		this.pack();
+		//this.pack();
 	}
 	
 	private JMenu dodajMenu(JMenuBar menubar, String naslov) {
