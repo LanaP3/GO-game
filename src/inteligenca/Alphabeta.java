@@ -24,7 +24,7 @@ public class Alphabeta {
 	
 	// crni igralec maksimizira, beli minimalizira
 	public Poteza izberiPotezo(Igra igra) {
-		if (random.nextDouble() < 0.01) return new Poteza(-1, -1); // če ni tega nemara preskočit poteze
+		if (random.nextDouble() < 0.02) return new Poteza(-1, -1); // če ni tega nemara preskočit poteze
 		return alphabeta(igra, this.globina, Integer.MIN_VALUE, Integer.MAX_VALUE, igra.naPotezi() == Igralec.CRNI).poteza;
 	}
 	
