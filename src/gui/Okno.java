@@ -15,6 +15,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import logika.Igralec;
+import splosno.Poteza;
 import vodja.Vodja;
 import vodja.VrstaIgralca;
 
@@ -142,7 +143,7 @@ public class Okno extends JFrame implements ActionListener {
 			}
 		else if (objekt == preskociPotezo) {
 			if (Vodja.igra != null) {
-				Vodja.preskoci();
+				Vodja.igrajClovekovoPotezo(new Poteza(-1, -1));
 			}
 		}
 		
@@ -159,7 +160,8 @@ public class Okno extends JFrame implements ActionListener {
 				status.setText("Zmagal je črni");
 				break;
 			case V_TEKU:
-				status.setText("Na potezi je " + Vodja.igra.naPotezi() + " - " + Vodja.vrstaIgralca.get(Vodja.igra.naPotezi()));
+				status.setText("Na potezi je " + Vodja.igra.naPotezi() + " - " + Vodja.vrstaIgralca.get(Vodja.igra.naPotezi()) + 
+						" ... Preskoki: " + Vodja.igra.preskoki);
 			}
 		}
 		platno.repaint();
