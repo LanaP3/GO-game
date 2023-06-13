@@ -8,6 +8,7 @@ import javax.swing.SwingWorker;
 
 import gui.Okno;
 import inteligenca.Alphabeta;
+import inteligenca.Inteligenca;
 import logika.Igra;
 import logika.Igralec;
 import splosno.Poteza;
@@ -44,7 +45,7 @@ public class Vodja {
 	}
 	
 	private static Random random = new Random ();
-	public static Alphabeta ai = new Alphabeta(3);
+	public static Inteligenca ai = new Inteligenca();
 
 	public static void igrajRacunalnikovoPotezo() {
 		Igra zacetnaIgra = igra;
@@ -74,12 +75,6 @@ public class Vodja {
 		}
 	}
 	
-	public static void preskoci() {
-		igra.na_potezi = igra.na_potezi.nasprotnik();
-		igra.preskoki++;
-		clovekNaVrsti = false;
-		igraj();
-	}
 
 
 }

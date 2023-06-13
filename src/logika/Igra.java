@@ -16,6 +16,7 @@ public class Igra {
 	public Set<SkupinaZetonov> skupine_zetonov;
 	public int n; // dimenzija mreze
 	public int preskoki; // število zaporednih preskokov poteze (če >= 2 se igra konča)
+	public int poteze; // število vseh potez v igri
 	
 	public Igra(int n) {
 		this.n = n;
@@ -35,6 +36,7 @@ public class Igra {
 		this.skupine_zetonov = new HashSet<SkupinaZetonov>();
 		this.na_potezi = igra.na_potezi;
 		this.n = igra.n;
+		this.preskoki = igra.preskoki;
 		for (int i = 0; i < igra.n; i++) {
 			for (int j = 0; j < igra.n; j++) {
 				this.mreza.put(new Koordinati(i, j), new Zeton(igra.mreza.get(new Koordinati(i, j))));
@@ -60,7 +62,7 @@ public class Igra {
 		return Stanje.V_TEKU;
 	}
 	
-	private int prestejTocke() {
+	public int prestejTocke() {
 		int tocke = 0;
 		Set<Koordinati> pregledani = new HashSet<Koordinati>();
 		Map<Integer, Set<Koordinati>> praznaSkupina;
@@ -173,12 +175,19 @@ public class Igra {
 	
 	
 	public boolean odigraj(Poteza poteza) {
-		int x = poteza.getX();
-		int y = poteza.getY();
+		int x = poteza.x();
+		int y = poteza.y();
 		Koordinati k = new Koordinati(x, y);
+		if (x == -1 && y == -1) {
+			preskoki++;
+			poteze++;
+			na_potezi = na_potezi.nasprotnik();
+			return true;
+		}
 		Zeton zeton = mreza.get(k);
 		if (zeton.polje == Polje.PRAZNO) {
 			preskoki = 0;
+			poteze++;
 			zeton.spremeniBarvo(na_potezi.polje());
 			SkupinaZetonov s = new SkupinaZetonov(zeton);
 			for (Koordinati l : zeton.sosedi) {
@@ -217,6 +226,7 @@ public class Igra {
 				}
 			}
 		}
+		moznePoteze.add(new Poteza(-1, -1)); // preskok
 		return moznePoteze; 
 	}
 }

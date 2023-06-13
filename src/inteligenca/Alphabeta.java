@@ -2,6 +2,7 @@ package inteligenca;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import logika.Igra;
 import logika.Igralec;
@@ -14,19 +15,24 @@ import splosno.Poteza;
 public class Alphabeta {
 	
 	private int globina;
+	private Random random;
 	
 	public Alphabeta(int globina) {
 		this.globina = globina;
+		random = new Random();
 	}
 	
 	// crni igralec maksimizira, beli minimalizira
 	public Poteza izberiPotezo(Igra igra) {
+		if (random.nextDouble() < 0.01) return new Poteza(-1, -1); // če ni tega nemara preskočit poteze
 		return alphabeta(igra, this.globina, Integer.MIN_VALUE, Integer.MAX_VALUE, igra.naPotezi() == Igralec.CRNI).poteza;
 	}
 	
 	public OcenjenaPoteza alphabeta(Igra igra, int globina, int alpha, int beta, boolean max) {
 		List<Poteza> poteze = igra.poteze();
-		Collections.sort(poteze, new NewSort(igra));
+		//poteze.remove(new Poteza(-1, -1));
+		//Collections.sort(poteze, new NewSort(igra));
+		//poteze.add(new Poteza(-1, -1));
 		switch (igra.stanje()) {
 		case ZMAGA_BELI:
 			return new OcenjenaPoteza(null, Integer.MIN_VALUE);
