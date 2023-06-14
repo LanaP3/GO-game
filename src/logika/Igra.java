@@ -16,13 +16,17 @@ public class Igra {
 	public Set<SkupinaZetonov> skupine_zetonov;
 	public int n; // dimenzija mreze
 	public int preskoki; // število zaporednih preskokov poteze (če >= 2 se igra konča)
-	public int poteze; // število vseh potez v igri
+	public int poteze; // število vseh potez v 
+	public Poteza ko; // pravilo "ko"
 	
 	public Igra(int n) {
 		this.n = n;
 		mreza = new HashMap<Koordinati, Zeton>();
 		na_potezi = Igralec.CRNI;
 		skupine_zetonov = new HashSet<SkupinaZetonov>();
+		preskoki = 0;
+		poteze = 0;
+		ko = null;
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				mreza.put(new Koordinati(i, j), new Zeton(i, j, n));
@@ -37,6 +41,8 @@ public class Igra {
 		this.na_potezi = igra.na_potezi;
 		this.n = igra.n;
 		this.preskoki = igra.preskoki;
+		this.poteze = igra.poteze;
+		this.ko = igra.ko;
 		for (int i = 0; i < igra.n; i++) {
 			for (int j = 0; j < igra.n; j++) {
 				this.mreza.put(new Koordinati(i, j), new Zeton(igra.mreza.get(new Koordinati(i, j))));
@@ -153,6 +159,16 @@ public class Igra {
 				}
 			}
 		}
+		// ko
+		if (obkoljena != null && obkoljena.skupina.size() == 1 && obkoljene_druga_barva.size() == 1) {
+			for (SkupinaZetonov s : obkoljene_druga_barva) {
+				if (s.skupina.size() == 1) {
+					for (Zeton z : s.skupina) {
+						ko = new Poteza(z.koordinati.x(), z.koordinati.y());
+					}
+				}
+			}
+		}
 		if (obkoljene_druga_barva.size() > 0) {
 			for (SkupinaZetonov s : obkoljene_druga_barva) {
 				s.odstraniSkupino();
@@ -179,6 +195,7 @@ public class Igra {
 		int y = poteza.y();
 		Koordinati k = new Koordinati(x, y);
 		if (x == -1 && y == -1) {
+			ko = null;
 			preskoki++;
 			poteze++;
 			na_potezi = na_potezi.nasprotnik();
@@ -186,6 +203,7 @@ public class Igra {
 		}
 		Zeton zeton = mreza.get(k);
 		if (zeton.polje == Polje.PRAZNO) {
+			ko = null;
 			preskoki = 0;
 			poteze++;
 			zeton.spremeniBarvo(na_potezi.polje());
@@ -227,6 +245,7 @@ public class Igra {
 			}
 		}
 		moznePoteze.add(new Poteza(-1, -1)); // preskok
+		if (ko != null) moznePoteze.remove(ko);
 		return moznePoteze; 
 	}
 }

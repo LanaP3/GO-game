@@ -216,10 +216,16 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 			}
 			if (y < dimPolja/2 || y > (1.5 + n)*dimPolja) {
 				gledan = null;
+				return;
 			}
 			else {
 				int k1 = (x+(dimPolja/2))/dimPolja - 1;
 				int k2 = (y+(dimPolja/2))/dimPolja - 1;
+				// ko
+				if (!Vodja.igra.poteze().contains(new Poteza(k1, k2))) {
+					gledan = null;
+					return;
+				}
 				gledan = new Koordinati(k1, k2);
 			}
 			
