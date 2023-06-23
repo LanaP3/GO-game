@@ -2,7 +2,7 @@
 
 ### Opis:
 Gre za projekt pri predmetu Programiranje 2, pri katerem sva v jeziku Java napisala program za igranje igre go. Go je stara družabna igra s koreninami na Kitajskem, ki se navadno igra na plošči velikosti 19x19. 
-Cilj igre je, s postavljanjem kamnov, osvojiti večji del plošče od nasprotnika. Igra je znana po preprostih pravilih, vendar globoki strategiji in kompleksnosti. Pravila lahko najdete na [https://sl.wikipedia.org/wiki/Go] (povezavi).
+Cilj igre je, s postavljanjem kamnov, osvojiti večji del plošče od nasprotnika. Igra je znana po preprostih pravilih, vendar globoki strategiji in kompleksnosti. Pravila lahko najdete na [povezavi](https://sl.wikipedia.org/wiki/Go).
 
 ### Zahteve:
 - Nameščen jezik Java
